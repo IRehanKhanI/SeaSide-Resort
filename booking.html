@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Seaside Resort - Booking</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .searchBar {
+        background-color: rgba(245, 240, 240, 0.26);
+        padding: 1rem;
+        width: 90%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        gap: 1rem;
+      }
+      .searchBar input,
+      .searchBar select {
+        background-color: white;
+        border: 2px transparent;
+        border-radius: 5px;
+        height: 41px;
+        padding: 0 12px;
+      }
+      .searchBar input[type="search"] {
+        width: 300px;
+      }
+      .searchBar input[type="date"] {
+        width: 150px;
+      }
+      .searchBar select {
+        width: 120px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li class="logo">
+          <img
+            src="image/logo2.png"
+            alt="Seaside Resort logo"
+            class="logo-wordmark"
+          />
+        </li>
+        <li class="navBtn"><a href="index.html">home</a></li>
+        <li class="navBtn"><a href="booking.html">Booking</a></li>
+        <li class="navBtn"><a href="reservation.html">Reservation</a></li>
+        <li class="navBtn"><a href="login.html">Login</a></li>
+        <li class="navBtn"><a href="signup.html">Sign up</a></li>
+      </ul>
+    </nav>
+
+    <div class="searchBar">
+      <input id="search-room" type="search" placeholder="Search for Room" />
+      <input id="checkin-date" type="date" placeholder="Check-in" />
+      <input id="checkout-date" type="date" placeholder="Check-out" />
+      <select id="adults-select">
+        <option value="0">Adults</option>
+        <option value="1">1 Adult</option>
+        <option value="2">2 Adults</option>
+        <option value="3">3 Adults</option>
+        <option value="4">4 Adults</option>
+      </select>
+      <select id="children-select">
+        <option value="0">Children</option>
+        <option value="0">0 Children</option>
+        <option value="1">1 Child</option>
+        <option value="2">2 Children</option>
+        <option value="3">3 Children</option>
+      </select>
+      <button id="search-button" type="button" class="book-now">Search</button>
+    </div>
+
+    <div id="room-card-container"></div>
+
+    <div class="contact-section">
+      <h2>Contact Us</h2>
+      <p>Seaside Road, Bardez, Goa - 403507</p>
+      <p>📞 +91 832 555 0123</p>
+      <p>✉️ www.seasideresort.com</p>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

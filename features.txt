@@ -1,0 +1,105 @@
+Seaside Resort – JavaScript Features (Implementation Summary)
+
+1) Single shared script and page-specific initialization
+- One shared file (script.js) is loaded on all pages.
+- On DOMContentLoaded, the script checks window.location.pathname and initializes only the logic needed for the current page:
+  • booking.html → initializeBookingPage()
+  • bookingdetails.html → renderBookingDetailsPage() + initializeForms()
+  • reservation.html → renderReservationPage()
+  • login.html / signup.html → initializeForms()
+
+2) Room catalog and dynamic booking list (booking.html)
+- A structured roomData array contains: id, name, deal, description, price, capacity (maxAdults/maxChildren), and image URLs (big, small1, small2, small3).
+- The page renders room cards dynamically into the container #room-card-container.
+- Each card shows images, name, deal, description, capacity, and a BOOK NOW button.
+- Search and filters:
+  • Text search filters by room name.
+  • Adults/Children filters respect each room’s capacity.
+  • Check-in and Check-out inputs are validated so Check-out can’t be earlier than Check-in.
+- Date guard: check-in and check-out inputs have min set to today.
+- Selecting a room:
+  • Clicking BOOK NOW saves the chosen room id to localStorage as selectedRoomId and navigates to bookingdetails.html.
+
+2a) Image interactions and DOM traversal
+- Room card image area uses a two-row CSS grid (large image row + thumbnails row).
+- DOM mouseover events on thumbnails swap the large preview image dynamically.
+- Utility functions:
+  • clearChildren(node): removes all children via parentNode.removeChild loop.
+  • el(tag, attrs, children): helper for document.createElement + setAttribute + textContent.
+
+2b) Keyboard and control structures
+- Search input listens for keydown Enter to trigger filtering.
+- Example switch-case helper (describeOccupancy) demonstrates conditional branching patterns.
+
+3) Booking details page rendering (bookingdetails.html)
+- Reads selectedRoomId from localStorage and looks up the matching room in roomData.
+- Populates:
+  • #room-name, #room-description, #room-price
+  • #bigimg, #smallimg1, #smallimg2, #smallimg3 with the room’s image URLs
+- If no selected room exists (invalid navigation), the user is redirected back to booking.html.
+
+4) Payment form enhancements and validation (bookingdetails.html)
+- Input masks/formatting as you type:
+  • Card Number (#card-number): numeric-only with 4-digit spacing (e.g., 4242 4242 4242 4242), inputmode=numeric, autocomplete=cc-number.
+  • Expiry (#expiry): auto-formats to MM/YY, inputmode=numeric, autocomplete=cc-exp.
+  • CVV (#cvv): numeric-only; accepts 3 digits (most cards) or 4 digits (American Express), inputmode=numeric, autocomplete=cc-csc.
+- Validation on submit:
+  • Card Number length 13–19 and passes the Luhn checksum.
+  • Expiry is in MM/YY format and not expired (validated against current date).
+  • CVV is 3 digits (or 4 digits if card starts with 34 or 37 for Amex).
+  • Inline error messages appear under invalid fields; submission is blocked until all inputs are valid.
+- NEXT button protection:
+  • The link inside the NEXT button is intercepted so it triggers form validation instead of navigating directly.
+- Successful payment path:
+  • Adds the selected room id to localStorage.reservations (avoids duplicates).
+  • Attempts a background batch sync using fetch POST (demo only); failure is ignored.
+  • Shows a success alert and redirects to reservation.html.
+
+5) Dynamic reservations list and cancellation (reservation.html)
+- Renders the user’s bookings from localStorage.reservations inside #reservation-container.
+- Each reservation shows the room’s image, name, description, and price.
+- Supports multiple bookings (even duplicates) by rendering each entry from the stored array.
+- Cancel Request button (per reservation):
+  • Removes that specific entry (by its index) from localStorage.reservations.
+  • Updates the reservation count badge, re-renders the list immediately, and shows a confirmation alert.
+- Empty state message is displayed when there are no reservations.
+
+5a) Batch POST (AJAX) demo
+- A “Sync to Server (Demo)” button triggers postReservationBatch(reservations):
+  • Sends an array of { roomId, ts } objects via fetch() with Content-Type: application/json.
+  • Gracefully handles network errors.
+
+6) Login / Signup behaviors
+- Signup: checks if password and confirm password match; shows an alert and redirects to index.html on success.
+- Login: shows a success alert and redirects to index.html.
+
+7) Reservation count badge (global)
+- updateReservationBadge() reads localStorage.reservations and updates the nav badge element (#reservation-count):
+  • Shows the total count when > 0
+  • Hides the badge when there are no bookings
+
+8) Local storage keys used
+
+9) Fetch GET demo: highlights on booking page
+- loadResortHighlights() fetches data/highlights.json and renders cards into a #resort-highlights section using document.createElement, setAttribute, and appendChild.
+- Basic responsive styles are defined in style.css for the highlights grid.
+
+10) Event handling overview in this project
+- addEventListener is used for: input/change on filters, keydown on search field, mouseover on thumbnails, click for cancel/sync buttons, and submit for forms.
+- selectedRoomId: stores the last room the user selected to book.
+- reservations: an array of room ids representing confirmed bookings.
+
+How to test quickly
+- Booking flow:
+  1) Open booking.html, type a room name to filter or adjust Adults/Children and dates.
+  2) Click BOOK NOW on a listed room.
+  3) On bookingdetails.html, verify details and images changed to the selected room.
+- Payment validation:
+  4) Try invalid values (letters in number/CVV, wrong MM/YY, expired date) and verify inline errors appear.
+  5) Enter valid details; after submission, you should see a success alert and be redirected to reservation.html.
+- Reservations page:
+  6) Confirm the booked room appears. Book additional rooms to see multiple entries.
+  7) Use Cancel Request to remove a specific booking, verify list and nav badge update.
+
+Notes
+- Unused UI experiments (like a gallery carousel and features list) were removed to keep the script focused on the booking/reservation workflow and payment validation.
