@@ -539,7 +539,7 @@ function attachPaymentFieldMasks(form) {
     card.setAttribute("autocomplete", "cc-number");
     card.maxLength = 19;
     card.addEventListener("input", () => {
-      const digits = card.value.replace(/\D/g, "");
+      const digits = card.value.replace(/\D/g, "").slice(0, 16);
       const groups = digits.match(/.{1,4}/g) || [];
       card.value = groups.join(" ");
     });
@@ -560,9 +560,9 @@ function attachPaymentFieldMasks(form) {
   if (cvv) {
     cvv.setAttribute("inputmode", "numeric");
     cvv.setAttribute("autocomplete", "cc-csc");
-    cvv.maxLength = 4;
+    cvv.maxLength = 3;
     cvv.addEventListener("input", () => {
-      cvv.value = cvv.value.replace(/\D/g, "").slice(0, 4);
+      cvv.value = cvv.value.replace(/\D/g, "").slice(0, 3);
     });
   }
 }
@@ -583,7 +583,7 @@ function luhnCheck(num) {
 }
 
 function isValidCardNumber(num) {
-  if (!/^\d{13,19}$/.test(num)) return false;
+  if (!/^\d{16}$/.test(num)) return false;
   return luhnCheck(num);
 }
 
@@ -608,12 +608,7 @@ function parseExpiry(mmYY) {
   return out;
 }
 
-function isAmex(num) {
-  return /^3[47]/.test(num);
-}
-
 function isValidCVV(cvv, cardNum) {
-  if (isAmex(cardNum)) return /^\d{4}$/.test(cvv);
   return /^\d{3}$/.test(cvv);
 }
 
