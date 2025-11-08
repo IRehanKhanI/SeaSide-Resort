@@ -77,6 +77,41 @@
         transform: translateY(-5px);
         background: rgb(0, 58, 10);
       }
+      spline-viewer {
+        width: 400px;
+        height: 500px;
+      }
+      .right {
+        overflow: hidden;
+        height: 430px;
+      }
+      .container2 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        flex-direction: row;
+      }
+      .left {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .contact-section{
+        display:flex;
+        flex-direction:row;
+      }
+      .contacts{
+        width:50%;
+      }
+      .maps{
+        width:50%;
+       
+      }
+      iframe{
+        border:3px;
+        border-radius:20px;
+        width:700px;
+      }
     </style>
   </head>
   <body>
@@ -90,7 +125,7 @@
           />
         </li>
         <li class="navBtn"><a href="index.html">home</a></li>
-        <li class="navBtn"><a href="booking.html">Booking</a></li>
+        <li class="navBtn"><a href="/booking.html">Booking</a></li>
         <li class="navBtn">
           <a href="reservation.html"
             >Reservation
@@ -113,36 +148,50 @@
         <li class="navBtn"><a href="signup.html">Sign up</a></li>
       </ul>
     </nav>
-    <h1 class="welcome">Welcome to the Seaside Goa Resort</h1>
-    <p
-      style="
-        text-align: center;
-        font-size: 30px;
-        color: white;
-        width: 95%;
-        animation: LefttoRight 1.5s 0.3s 1;
-      "
-    >
-      Book a Room starting at Rs. 5999/-
-    </p>
-    <button class="book-now">
-      <a
-        style="color: rgb(30, 56, 53); text-decoration: none"
-        href="booking.html"
-        >Book Now</a
-      >
-    </button>
-    <p
-      style="
-        text-align: center;
-        font-size: 30px;
-        color: white;
-        width: 95%;
-        animation: RighttoLeft 1.5s 0.3s 1;
-      "
-    >
-      Your comfort and satisfaction are our top priorities. Enjoy your stay!
-    </p>
+    <div class="container2">
+      <div class="left">
+        <h1 class="welcome">Welcome to the Seaside Goa Resort</h1>
+        <p
+          style="
+            text-align: center;
+            font-size: 30px;
+            color: white;
+            width: 95%;
+            animation: LefttoRight 1.5s 0.3s 1;
+          "
+        >
+          Book a Room starting at Rs. 5999/-
+        </p>
+        <button class="book-now">
+          <a
+            style="color: rgb(30, 56, 53); text-decoration: none"
+            href="booking.html"
+            >Book Now</a
+          >
+        </button>
+        <p
+          style="
+            text-align: center;
+            font-size: 30px;
+            color: white;
+            width: 95%;
+            animation: RighttoLeft 1.5s 0.3s 1;
+          "
+        >
+          Your comfort and satisfaction are our top priorities. Enjoy your stay!
+        </p>
+      </div>
+      <div class="right" id="right">
+        <script
+          type="module"
+          src="https://unpkg.com/@splinetool/viewer@1.10.99/build/spline-viewer.js"
+        ></script>
+        <spline-viewer
+          loading-anim-type="spinner-small-light"
+          url="https://prod.spline.design/OTc4oL6P4FpJheLD/scene.splinecode"
+        ></spline-viewer>
+      </div>
+    </div>
 
     <h2>Our Gallery</h2>
     <div id="gallery" class="gallery">
@@ -198,10 +247,14 @@
       </div>
     </div>
     <div class="contact-section">
-      <h2>Contact Us</h2>
+     <div class="contacts"> <h2>Contact Us</h2>
       <p>Seaside Road, Bardez, Goa - 403507</p>
       <p>📞 +91 832 555 0123</p>
-      <p>✉️ www.seasideresort.com</p>
+      <p>✉️ www.seasideresort.com</p></div><div class="map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3167.421090365323!2d73.79243147512595!3d15.594991185017815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbfeb0074e556bd%3A0x8df5557f01b8a85!2sAgnel%20Institute%20of%20Technology%20and%20Design!5e1!3m2!1sen!2sin!4v1762616821915!5m2!1sen!2sin" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+      </div>
     </div>
+    <script src="index.js"></script>
   </body>
 </html>

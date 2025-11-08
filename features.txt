@@ -1,12 +1,14 @@
 Seaside Resort – JavaScript Features (Implementation Summary)
 
-1) Single shared script and page-specific initialization
-- One shared file (script.js) is loaded on all pages.
-- On DOMContentLoaded, the script checks window.location.pathname and initializes only the logic needed for the current page:
-  • booking.html → initializeBookingPage()
-  • bookingdetails.html → renderBookingDetailsPage() + initializeForms()
-  • reservation.html → renderReservationPage()
-  • login.html / signup.html → initializeForms()
+1) Per-page JavaScript files (modularized)
+- Each page now loads its own JS file; no extra helper files created:
+  • index.html → index.js (badge + spline scroll behavior)
+  • booking.html → booking.js (room list, filters, search)
+  • bookingdetails.html → bookingdetails.js (room details + payment)
+  • reservation.html → reservation.js (list + cancel + sync)
+  • login.html → login.js (form submit)
+  • signup.html → signup.js (form submit)
+- This replaces the previous single script.js approach and maintains all features.
 
 2) Room catalog and dynamic booking list (booking.html)
 - A structured roomData array contains: id, name, deal, description, price, capacity (maxAdults/maxChildren), and image URLs (big, small1, small2, small3).
@@ -20,7 +22,7 @@ Seaside Resort – JavaScript Features (Implementation Summary)
 - Selecting a room:
   • Clicking BOOK NOW saves the chosen room id to localStorage as selectedRoomId and navigates to bookingdetails.html.
 
-2a) Image interactions and DOM traversal
+2a) Image interactions (booking.html)
 - Room card image area uses a two-row CSS grid (large image row + thumbnails row).
 - DOM mouseover events on thumbnails swap the large preview image dynamically.
 - Utility functions:
@@ -88,6 +90,12 @@ Seaside Resort – JavaScript Features (Implementation Summary)
 - addEventListener is used for: input/change on filters, keydown on search field, mouseover on thumbnails, click for cancel/sync buttons, and submit for forms.
 - selectedRoomId: stores the last room the user selected to book.
 - reservations: an array of room ids representing confirmed bookings.
+
+11) Scroll-based spline-viewer animation (index.html)
+- On index.html, the spline-viewer element (3D model) responds to window scroll events.
+- When the user scrolls past the original position of the spline-viewer, it becomes fixed to the top-right corner of the viewport.
+- Simultaneously, its size shrinks using CSS transform: scale(0.5) with transform-origin: top right for a compact floating effect.
+- Implemented in index.js.
 
 How to test quickly
 - Booking flow:
