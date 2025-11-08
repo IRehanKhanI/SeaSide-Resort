@@ -23,7 +23,7 @@ function initializeIndexPage() {
       splineViewer.style.right = "10px";
       splineViewer.style.transform = "scale(0.3)";
       splineViewer.style.transformOrigin = "top right";
-      // splineViewer.style.zIndex = "1000";
+      splineViewer.style.zIndex = "1";
     } else {
       splineViewer.style.position = "";
       splineViewer.style.top = "";
