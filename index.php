@@ -4,115 +4,123 @@
     <title>Seaside Resort</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" href="/image/logo2.png" />
-    <style>
-      .welcome {
-        color: white;
-        font-weight: 800;
-        font-size: 60px;
-        animation: ToptoDown 1.5s 0.3s 1;
-      }
+<style>
+  <style>
+  /* Title override for index page */
+  .welcome {
+    font-size: 60px;
+    animation: ToptoDown 1.5s 0.3s 1;
+  }
+  .welcome:hover {
+    text-shadow: 7px 7px 20px rgb(65, 187, 217);
+  }
 
-      .welcome:hover {
-        text-shadow: 7px 7px 20px rgb(65, 187, 217);
-      }
+  /* --- Info Containers --- */
+  .container1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 95%;
+    margin: 20px 0;
+    align-content: baseline;
+  }
+  .container {
+    border-radius: 20px;
+    color: white;
+    background: rgba(56, 53, 53, 0.572);
+    width: 40%;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    padding: 20px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+  .container:hover {
+    animation: bordercolor 20s infinite;
+    transform: scale(1.1);
+    background: rgba(56, 53, 53, 0.806);
+  }
 
-      .container1 {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        width: 95%;
-        margin: 20px 0;
-        align-content: baseline;
-      }
-      .container {
-        border-radius: 20px;
-        color: white;
-        background: rgba(56, 53, 53, 0.572);
-        width: 40%;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        padding: 20px;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-      }
-      .container:hover {
-        animation: bordercolor 20s infinite;
-        transform: scale(1.1);
-        background: rgba(56, 53, 53, 0.806);
-      }
+  /* --- Image Gallery --- */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    width: 95%;
+    margin: 20px 0;
+  }
+  .gallery img {
+    width: 100%;
+    height: 300px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+  }
+  .gallery img:hover {
+    transform: scale(1.05);
+  }
 
-      .gallery {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-        width: 95%;
-        margin: 20px 0;
-      }
-      .gallery img {
-        width: 100%;
-        height: 300px;
-        border-radius: 10px;
-        transition: transform 0.3s ease;
-      }
-      .gallery img:hover {
-        transform: scale(1.05);
-      }
+  /* --- Features --- */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 95%;
+    margin: 20px 0;
+  }
+  .feature-card {
+    background: rgba(0, 0, 0, 0.572);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    color: white;
+    transition: transform 0.3s ease;
+  }
+  .feature-card:hover {
+    transform: translateY(-5px);
+    background: rgb(0, 58, 10);
+  }
+  
+  /* --- 3D Model --- */
+  spline-viewer {
+    width: 100%;
+    height: 500px;
+  }
+  .right {
+    overflow: hidden;
+    height: 430px;
+    width: 500px;
+    padding-left: 100px;
+  }
+  .container2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    flex-direction: row;
+  }
+  .left {
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        width: 95%;
-        margin: 20px 0;
-      }
-      .feature-card {
-        background: rgba(0, 0, 0, 0.572);
-        border-radius: 15px;
-        padding: 15px;
-        text-align: center;
-        color: white;
-        transition: transform 0.3s ease;
-      }
-      .feature-card:hover {
-        transform: translateY(-5px);
-        background: rgb(0, 58, 10);
-      }
-      spline-viewer {
-        width: 400px;
-        height: 500px;
-      }
-      .right {
-        overflow: hidden;
-        height: 430px;
-      }
-      .container2 {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-        flex-direction: row;
-      }
-      .left {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-      .contact-section{
-        display:flex;
-        flex-direction:row;
-      }
-      .contacts{
-        width:50%;
-      }
-      .maps{
-        width:50%;
-       
-      }
-      iframe{
-        border:3px;
-        border-radius:20px;
-        width:700px;
-      }
-    </style>
+  /* --- Index Contact Section --- */
+  .contact-section {
+    display: flex;
+    flex-direction: row;
+  }
+  .contacts {
+    width: 50%;
+  }
+  .maps {
+    width: 50%;
+  }
+  iframe {
+    border: 3px;
+    border-radius: 20px;
+    width: 700px;
+  }
+</style>
+</style>
   </head>
   <body>
     <nav>
@@ -124,10 +132,10 @@
             class="logo-wordmark"
           />
         </li>
-        <li class="navBtn"><a href="index.html">home</a></li>
-        <li class="navBtn"><a href="/booking.html">Booking</a></li>
+        <li class="navBtn"><a href="index.php">home</a></li>
+        <li class="navBtn"><a href="booking.php">Booking</a></li>
         <li class="navBtn">
-          <a href="reservation.html"
+          <a href="reservation.php"
             >Reservation
             <span
               id="reservation-count"
@@ -144,8 +152,8 @@
             ></a
           >
         </li>
-        <li class="navBtn"><a href="login.html">Login</a></li>
-        <li class="navBtn"><a href="signup.html">Sign up</a></li>
+        <li class="navBtn"><a href="login.php">Login</a></li>
+        <li class="navBtn"><a href="signup.php">Sign up</a></li>
       </ul>
     </nav>
     <div class="container2">
@@ -165,7 +173,7 @@
         <button class="book-now">
           <a
             style="color: rgb(30, 56, 53); text-decoration: none"
-            href="booking.html"
+            href="booking.php"
             >Book Now</a
           >
         </button>

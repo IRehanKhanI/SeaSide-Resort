@@ -3,85 +3,43 @@
   <head>
     <title>Seaside Resort - Sign Up</title>
     <link rel="stylesheet" href="style.css" />
-    <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-      .welcome {
-        color: white;
-        font-weight: 800;
-        font-size: 50px;
-        text-shadow: 7px 7px 20px black;
-        margin-bottom: 30px;
-      }
-      .signup-container {
-        background: rgba(56, 53, 53, 0.7);
-        padding: 30px;
-        border-radius: 20px;
-        width: 400px;
-        color: white;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        border: 2px solid transparent;
-        transition: 0.3s ease;
-      }
-      .signup-container:hover {
-        animation: bordercolor 20s infinite;
-        background: rgba(56, 53, 53, 0.9);
-      }
-      .signup-container h2 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 28px;
-      }
-      .form-group {
-        margin-bottom: 15px;
-      }
-      .form-group label {
-        display: block;
-        font-size: 18px;
-        margin-bottom: 5px;
-      }
-      .form-group input {
-        width: 100%;
-        padding: 10px;
-        border-radius: 10px;
-        border: none;
-        font-size: 16px;
-        outline: none;
-      }
-      .book-now {
-        display: block;
-        margin: 20px auto 0 auto;
-        color: white;
-        font-size: 18px;
-        background-color: #d9d9d9b4;
-        border-radius: 10px;
-        border: 3px solid #d9d9d9b4;
-        padding: 10px 25px;
-        transition: 0.2s ease-in-out;
-        text-shadow: 10px 10px 20px rgba(0, 0, 0, 0.486);
-      }
-      .book-now:hover {
-        transform: scale(1.1);
-        animation: borderColor2 5s infinite;
-        box-shadow: 0 8px 32px 0 rgba(255, 255, 255, 0.241);
-      }
-      .login-link {
-        text-align: center;
-        margin-top: 15px;
-        font-size: 16px;
-      }
-      .login-link a {
-        color: #ffd700;
-        text-decoration: none;
-      }
-      .login-link a:hover {
-        text-decoration: underline;
-      }
-    </style>
+  <style>
+  /* Set a specific justify-content for login/signup pages */
+  body {
+    justify-content: center;
+  }
+  .signup-container {
+    background: rgba(56, 53, 53, 0.7);
+    padding: 30px;
+    border-radius: 20px;
+    width: 400px;
+    color: white;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border: 2px solid transparent;
+    transition: 0.3s ease;
+  }
+  .signup-container:hover {
+    animation: bordercolor 20s infinite;
+    background: rgba(56, 53, 53, 0.9);
+  }
+  .signup-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+  }
+  .login-link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 16px;
+  }
+  .login-link a {
+    color: #ffd700;
+    text-decoration: none;
+  }
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+</style>
   </head>
   <body>
     <nav>

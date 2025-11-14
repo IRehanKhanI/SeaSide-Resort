@@ -1,4 +1,3 @@
-// index.js – logic for index.html (spline viewer scroll behavior + badge)
 function updateReservationBadge() {
   const badge = document.getElementById("reservation-count");
   if (!badge) return;
@@ -14,7 +13,7 @@ function updateReservationBadge() {
 function initializeIndexPage() {
   const splineViewer = document.querySelector("#right");
   if (!splineViewer) return;
-  const threshold = window.innerHeight + window.scrollY;
+  const threshold = window.innerHeight;
   window.addEventListener("scroll", () => {
     const scrollY = window.scrollY;
     if (scrollY > threshold) {
