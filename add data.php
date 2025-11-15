@@ -2,7 +2,6 @@
 
 echo "Script started...<br>";
 
-// 1. Database Connection
 $conn = require __DIR__ . '/db_connect.php';
 
 if (!$conn) {
@@ -10,50 +9,50 @@ if (!$conn) {
 }
 echo "Database connected successfully.<br>";
 
-// 2. Your Data
+
 $roomData = [
-  // [
-  //   "name" => "Standard Double Room",
-  //   "deal" => "Limited-time Deal",
-  //   "description" => "Beds: 1 double or 2 singles. Breakfast included · Free cancellation.",
-  //   "price" => "₹3,000",
-  //   "maxAdults" => 2,
-  //   "maxChildren" => 1,
-  //   "images" => [
-  //     "big" => "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //     "small1" => "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //     "small2" => "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //     "small3" => "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //   ],
-  // ],
-  // [
-  //   "name" => "Deluxe Sea View Room",
-  //   "deal" => "Premium Choice",
-  //   "description" => "Larger room with a king-size bed. Balcony with sea view · Breakfast & dinner included.",
-  //   "price" => "₹8,000",
-  //   "maxAdults" => 2,
-  //   "maxChildren" => 2,
-  //   "images" => [
-  //     "big" => "https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //     "small1" => "https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //     "small2" => "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //     "small3" => "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //   ],
-  // ],
-  // [
-  //   "name" => "Executive Suite",
-  //   "deal" => "Luxury Pick",
-  //   "description" => "Luxury suite with a living area and Jacuzzi. King-size bed · Complimentary drinks.",
-  //   "price" => "₹12,000",
-  //   "maxAdults" => 3,
-  //   "maxChildren" => 2,
-  //   "images" => [
-  //     "big" => "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //     "small1" => "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //     "small2" => "https://images.unsplash.com/photo-1590490359854-dfba196da72c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //     "small3" => "https://images.unsplash.com/photo-1559599101-f09722fb4948?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-  //   ],
-  // ],
+   [
+    "name" => "Standard Double Room",
+    "deal" => "Limited-time Deal",
+    "description" => "Beds: 1 double or 2 singles. Breakfast included · Free cancellation.",
+    "price" => "₹3,000",
+    "maxAdults" => 2,
+    "maxChildren" => 1,
+    "images" => [
+      "big" => "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small1" => "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small2" => "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small3" => "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+    ],
+  ],
+  [
+    "name" => "Deluxe Sea View Room",
+    "deal" => "Premium Choice",
+    "description" => "Larger room with a king-size bed. Balcony with sea view · Breakfast & dinner included.",
+    "price" => "₹8,000",
+    "maxAdults" => 2,
+    "maxChildren" => 2,
+    "images" => [
+      "big" => "https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=1974&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small1" => "https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=1974&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small2" => "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small3" => "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+    ],
+  ],
+  [
+    "name" => "Executive Suite",
+    "deal" => "Luxury Pick",
+    "description" => "Luxury suite with a living area and Jacuzzi. King-size bed · Complimentary drinks.",
+    "price" => "₹12,000",
+    "maxAdults" => 3,
+    "maxChildren" => 2,
+    "images" => [
+      "big" => "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small1" => "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small2" => "https://images.unsplash.com/photo-1590490359854-dfba196da72c?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small3" => "https://images.unsplash.com/photo-1559599101-f09722fb4948?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+    ],
+  ],
   [
     "name" => "Classic Single Room",
     "deal" => "Solo Traveler",
@@ -62,7 +61,7 @@ $roomData = [
     "maxAdults" => 1,
     "maxChildren" => 0,
     "images" => [
-      "big" => "https://images.unsplash.com/photo-1560185893-a55d8c180e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
+      "big" => "https://images.unsplash.com/photo-1560185893-a55d8c180e04?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small1" => "https://images.unsplash.com/photo-1551882547-ff40c63fe5f4?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small2" => "https://images.unsplash.com/photo-1594910600109-9a036c63b398?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small3" => "https://images.unsplash.com/photo-1629140534220-72e5068f56e9?q=80&w=2069&auto=format&fit=crop&ixlib-rb-4.0.3",
@@ -90,7 +89,7 @@ $roomData = [
     "maxAdults" => 2,
     "maxChildren" => 0,
     "images" => [
-      "big" => "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
+      "big" => "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small1" => "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small2" => "https://images.unsplash.com/photo-1590490359854-dfba196da72c?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small3" => "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
@@ -118,7 +117,7 @@ $roomData = [
     "maxAdults" => 2,
     "maxChildren" => 2,
     "images" => [
-      "big" => "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
+      "big" => "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small1" => "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small2" => "https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=1974&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small3" => "https://images.unsplash.com/photo-1540541338287-41700207dee6?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
@@ -147,7 +146,7 @@ $roomData = [
     "maxChildren" => 2,
     "images" => [
       "big" => "https://images.unsplash.com/photo-1598928636135-d146006ff4be?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
-      "small1" => "httpsimages.unsplash.com/photo-1596394516093-501ba68a0ba6?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small1" => "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small2" => "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small3" => "https://images.unsplash.com/photo-1594882645126-14020914d58d?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
     ],
@@ -162,7 +161,7 @@ $roomData = [
     "images" => [
       "big" => "https://images.unsplash.com/photo-1591088398332-8a7791972843?q=80&w=1974&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small1" => "https://images.unsplash.com/photo-1592229505726-a9c36211e4f4?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
-      "small2" => "httpsmimages.unsplash.com/photo-1576675784201-0e142b423952?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small2" => "https.unsplash.com/photo-1576675784201-0e142b423952?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small3" => "https://images.unsplash.com/photo-1576495199011-eb94736d05d6?q=80&w=2071&auto=format&fit=crop&ixlib-rb-4.0.3",
     ],
   ],
@@ -191,7 +190,7 @@ $roomData = [
       "big" => "https://images.unsplash.com/photo-1506974210756-8e1b8985d348?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small1" => "https://images.unsplash.com/photo-1494512165618-3a5116e0364f?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
       "small2" => "https://images.unsplash.com/photo-1525944372996-23b10ab4074c?q=80&w=1974&auto=format&fit=crop&ixlib-rb-4.0.3",
-      "small3" => "httpsmimages.unsplash.com/photo-1508873699735-643f9c6c0dab?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
+      "small3" => "https.unsplash.com/photo-1508873699735-643f9c6c0dab?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3",
     ],
   ],
 ];

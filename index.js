@@ -1,15 +1,3 @@
-function updateReservationBadge() {
-  const badge = document.getElementById("reservation-count");
-  if (!badge) return;
-  const reservations = JSON.parse(localStorage.getItem("reservations")) || [];
-  if (reservations.length > 0) {
-    badge.textContent = reservations.length;
-    badge.style.display = "inline-block";
-  } else {
-    badge.style.display = "none";
-  }
-}
-
 function initializeIndexPage() {
   const splineViewer = document.querySelector("#right");
   if (!splineViewer) return;

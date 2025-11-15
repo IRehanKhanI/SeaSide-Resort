@@ -1,5 +1,4 @@
 <?php
-  // bookingdetails.php - server-rendered room details
   $conn = require __DIR__ . '/db_connect.php';
   $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
   if ($id <= 0) {
@@ -8,7 +7,6 @@
   }
 
   $sql = "SELECT id, name, deal, price, maxAdults, maxChildren, image_big, image_small1, image_small2, image_small3";
-  // include description if present
   $descRes = mysqli_query($conn, "SHOW COLUMNS FROM hotels LIKE 'description'");
   if ($descRes && mysqli_num_rows($descRes) > 0) {
     $sql .= ", description";
@@ -40,261 +38,72 @@
   <head>
     <title>Seaside Resort - Booking Details</title>
     <link rel="stylesheet" href="style.css" />
-  <style>
     <style>
-  .details-card {
-    width: 80%;
-    max-width: 1100px;
-    margin: 20px;
-    padding: 30px;
-    background: rgba(56, 53, 53, 0.8);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-  }
+      /* Align with booking.php card layout */
+      .roomCard {
+        display: flex;
+        width: 1200px;
+        background-color: rgb(26 26 37 / 59%);
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px auto;
+        color: white;
+        gap: 16px;
+        align-items: center;
+      }
+      .roomCard .images {
+        flex: 0 0 auto;
+        width: 350px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: 250px auto;
+        gap: 12px;
+      }
+      .roomCard .images .big-img { grid-column: 1 / span 3; grid-row: 1 / 2; width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+      .thumb-row{ display:flex; width:100%; gap:8px; grid-column: 1 / span 3; }
+      .thumb-row .thumb{ flex:1 1 0; height: 80px; object-fit: cover; border-radius: 8px; display:block; }
+      .roomDetails{ flex:1 1 auto; }
+      .roomDetails h2{ margin:0 0 10px; font-size:28px; }
+      .capacity{ font-weight:bold; margin-top:10px; }
+      .deal{ display:inline-block; background: rgba(217,217,217,0.18); padding:4px 8px; border-radius:6px; font-weight:600; }
+      .roomSide{ flex:0 0 180px; display:flex; flex-direction:column; align-items:flex-end; justify-content:center; gap:8px; }
+      .price{ font-size:1.8rem; font-weight:bold; color:#fff; text-align:right; }
 
-  /* --- Image Gallery Grid --- */
-  .images {
-    width: 350px;
-    display: grid;
-    gap: 10px;
-    grid-template-areas:
-      "big big big"
-      "small1 small2 small3";
-  }
-  #bigimg {
-    grid-area: big;
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 10px;
-  }
-  #smallimg1 {
-    grid-area: small1;
-    width: 110px;
-    height: 75px;
-    object-fit: cover;
-    border-radius: 6px;
-  }
-  #smallimg2 {
-    grid-area: small2;
-    width: 110px;
-    height: 75px;
-    object-fit: cover;
-    border-radius: 6px;
-  }
-  #smallimg3 {
-    grid-area: small3;
-    width: 110px;
-    height: 75px;
-    object-fit: cover;
-    border-radius: 6px;
-  }
-  img {
-    transition: transform 0.25s ease;
-  }
-  img:hover {
-    transform: scale(1.05);
-  }
+      /* Payment overlay */
+      .overlay{ position: fixed; display:none; justify-content:center; align-items:center; inset:0; }
+      .overlay:target{ display:flex; }
+      .payment-modal{ width: 90%; max-width: 900px; background: rgba(20,20,20,0.95); border-radius:12px; padding:18px; display:flex; gap:18px; color:#eee; position:relative; }
+      .pay-left{ padding:12px; color:#fff; width:55%; }
+      .form-group{ margin-bottom:12px; }
+      .form-group label{ color:#ddd; font-size:0.95rem; display:block; margin-bottom:6px; }
+      .form-group input{ width:100%; padding:8px 10px; border-radius:6px; border:none; }
+      .btn-next{ background:#0b74de; color:#fff; padding:10px 16px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+      .pay-right{ width: 320px; background:#1f1f1f; padding:14px; border-radius:10px; text-align:center; color:#f0f0f0; }
+      .qr-box img{ width:200px; height:200px; display:block; margin:0 auto 10px; border-radius:6px; object-fit:cover; }
+      .upi-logos{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
+      .upi-logos span{ font-size:0.85rem; color:#555; background:#f3f3f3; padding:6px 8px; border-radius:6px; }
+      .close-x{ position:absolute; right:12px; top:8px; font-size:26px; color:#fff; text-decoration:none; line-height:1; }
 
-  /* --- Room Info --- */
-  .info {
-    margin-left: 8px;
-  }
-  .info h2 {
-    font-size: 28px;
-    margin: 0 0 10px 0;
-  }
-  .deal {
-    display: inline-block;
-    background: rgba(217, 217, 217, 0.18);
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-weight: 600;
-  }
-  .btn-container {
-    margin-top: 16px;
-  }
+      /* Image viewer overlay */
+      .img-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); display: none; align-items: center; justify-content: center; z-index: 9999; }
+      .img-overlay.open { display: flex; }
+      .gallery-frame { max-width: 90%; max-height: 80%; display: flex; align-items: center; justify-content: center; }
+      .gallery-frame img { max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 10px; }
+      .gallery-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0, 0, 0, 0.4); color: #fff; border: none; font-size: 40px; padding: 8px 12px; cursor: pointer; border-radius: 6px; }
+      .gallery-nav.prev { left: 18px; }
+      .gallery-nav.next { right: 18px; }
+      .gallery-close { position: absolute; right: 18px; top: 18px; background: rgba(255, 255, 255, 0.06); border: none; color: #fff; font-size: 28px; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+      .gallery-thumbs { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; max-width: 90%; overflow: auto; padding: 6px 8px; }
+      .gallery-thumbs img { height: 64px; width: auto; border-radius: 6px; cursor: pointer; opacity: 0.7; border: 2px solid transparent; }
+      .gallery-thumbs img.active { opacity: 1; border-color: #0b74de; }
 
-  /* --- Payment Modal --- */
-  .overlay {
-    position: fixed;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    width: 80%;
-  }
-  .overlay:target {
-    display: flex;
-  }
-  .payment-modal {
-    width: 90%;
-    background: rgba(63, 62, 62, 0.795);
-    border-radius: 12px;
-    padding: 18px;
-    display: flex;
-    gap: 18px;
-    color: #111;
-    position: relative;
-  }
-  .pay-left {
-    padding: 12px;
-    color: #fff;
-    width: 50%;
-  }
-  /* Payment-specific form group */
-  .form-group {
-    margin-bottom: 12px;
-  }
-  .form-group label {
-    color: #ddd;
-    font-size: 0.95rem;
-    display: block;
-    margin-bottom: 6px;
-  }
-  .form-group input {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 6px;
-    border: none;
-  }
-  .btn-next {
-    background: #0b74de;
-    color: #ffffff;
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: 700;
-  }
-  .pay-right {
-    width: 320px;
-    background: #fff;
-    padding: 14px;
-    border-radius: 10px;
-    text-align: center;
-  }
-  .qr-box img {
-    width: 200px;
-    height: 200px;
-    display: block;
-    margin: 0 auto 10px;
-    border-radius: 6px;
-    object-fit: cover;
-  }
-  .upi-logos {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 10px;
-  }
-  .upi-logos span {
-    font-size: 0.85rem;
-    color: #555;
-    background: #f3f3f3;
-    padding: 6px 8px;
-    border-radius: 6px;
-  }
-  .close-x {
-    position: absolute;
-    right: 12px;
-    top: 8px;
-    font-size: 26px;
-    color: #fff;
-    text-decoration: none;
-    line-height: 1;
-  }
-  
-  /* --- Image Gallery Overlay --- */
-  .img-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
-  .img-overlay.open {
-    display: flex;
-  }
-  .gallery-frame {
-    max-width: 90%;
-    max-height: 80%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .gallery-frame img {
-    max-width: 100%;
-    max-height: 80vh;
-    object-fit: contain;
-    border-radius: 10px;
-  }
-  .gallery-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.4);
-    color: #fff;
-    border: none;
-    font-size: 40px;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 6px;
-  }
-  .gallery-nav.prev {
-    left: 18px;
-  }
-  .gallery-nav.next {
-    right: 18px;
-  }
-  .gallery-close {
-    position: absolute;
-    right: 18px;
-    top: 18px;
-    background: rgba(255, 255, 255, 0.06);
-    border: none;
-    color: #fff;
-    font-size: 28px;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .gallery-thumbs {
-    position: absolute;
-    bottom: 36px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    max-width: 90%;
-    overflow: auto;
-    padding: 6px 8px;
-  }
-  .gallery-thumbs img {
-    height: 64px;
-    width: auto;
-    border-radius: 6px;
-    cursor: pointer;
-    opacity: 0.7;
-    border: 2px solid transparent;
-  }
-  .gallery-thumbs img.active {
-    opacity: 1;
-    border-color: #0b74de;
-  }
-</style>
-  </style>
+    </style>
   </head>
   <body>
     <nav>
       <ul>
         <li class="logo">
-          <img src="image/logo2.png" alt="Seaside Resort logo" class="logo-wordmark" />
+          <img src="image/logo3.png" alt="Seaside Resort logo" class="logo-wordmark" />
         </li>
         <li class="navBtn"><a href="index.php">Home</a></li>
         <li class="navBtn"><a href="booking.php">Booking</a></li>
@@ -303,36 +112,38 @@
       </ul>
     </nav>
 
-    <div class="details-card">
+    <div class="roomCard">
       <div class="images">
-        <img id="bigimg" src="<?php echo htmlspecialchars($room['image_big']); ?>" alt="<?php echo htmlspecialchars($room['name']); ?>" />
-        <?php if (!empty($room['image_small1'])): ?>
-          <img id="smallimg1" src="<?php echo htmlspecialchars($room['image_small1']); ?>" alt="<?php echo htmlspecialchars($room['name']); ?> thumb 1" />
-        <?php else: ?>
-          <img id="smallimg1" src="<?php echo htmlspecialchars($room['image_big']); ?>" alt="thumb" />
-        <?php endif; ?>
-        <?php if (!empty($room['image_small2'])): ?>
-          <img id="smallimg2" src="<?php echo htmlspecialchars($room['image_small2']); ?>" alt="<?php echo htmlspecialchars($room['name']); ?> thumb 2" />
-        <?php else: ?>
-          <img id="smallimg2" src="<?php echo htmlspecialchars($room['image_big']); ?>" alt="thumb" />
-        <?php endif; ?>
-        <?php if (!empty($room['image_small3'])): ?>
-          <img id="smallimg3" src="<?php echo htmlspecialchars($room['image_small3']); ?>" alt="<?php echo htmlspecialchars($room['name']); ?> thumb 3" />
-        <?php else: ?>
-          <img id="smallimg3" src="<?php echo htmlspecialchars($room['image_big']); ?>" alt="thumb" />
-        <?php endif; ?>
+        <img id="bigimg" class="big-img" src="<?php echo htmlspecialchars($room['image_big']); ?>" alt="<?php echo htmlspecialchars($room['name']); ?>" />
+        <div class="thumb-row">
+          <?php if (!empty($room['image_small1'])): ?>
+            <img id="smallimg1" class="thumb" src="<?php echo htmlspecialchars($room['image_small1']); ?>" alt="<?php echo htmlspecialchars($room['name']); ?> thumb 1" />
+          <?php endif; ?>
+          <?php if (!empty($room['image_small2'])): ?>
+            <img id="smallimg2" class="thumb" src="<?php echo htmlspecialchars($room['image_small2']); ?>" alt="<?php echo htmlspecialchars($room['name']); ?> thumb 2" />
+          <?php endif; ?>
+          <?php if (!empty($room['image_small3'])): ?>
+            <img id="smallimg3" class="thumb" src="<?php echo htmlspecialchars($room['image_small3']); ?>" alt="<?php echo htmlspecialchars($room['name']); ?> thumb 3" />
+          <?php endif; ?>
+        </div>
       </div>
 
-      <div class="info">
+      <div class="roomDetails">
+        <span class="deal"><?php echo htmlspecialchars($room['deal']); ?></span>
         <h2 id="room-name"><?php echo htmlspecialchars($room['name']); ?></h2>
-        <p><span class="deal"><?php echo htmlspecialchars($room['deal']); ?></span></p>
         <?php if (isset($room['description'])): ?>
           <p id="room-description"><?php echo nl2br(htmlspecialchars($room['description'])); ?></p>
         <?php endif; ?>
-        <p><b>Price:</b> <span id="room-price"><?php echo htmlspecialchars($room['price']); ?></span></p>
-        <div class="btn-container">
-          <a href="#paymentOverlay" class="book-now" style="text-decoration: none; display: inline-block; padding: 10px 16px; border-radius: 8px; background: #0b74de; color: #fff;">Confirm Booking</a>
+        <p class="capacity">Sleeps: <?php echo (int)$room['maxAdults']; ?> Adults &amp; <?php echo (int)$room['maxChildren']; ?> Children</p>
+      </div>
+      <div class="roomSide">
+        <div class="price">₹<?php echo htmlspecialchars($room['price']); ?>/-</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <label for="cardQuantity" style="color:#fff;">Rooms</label>
+          <input id="cardQuantity" type="number" min="1" value="1" style="width:70px; padding:6px; border-radius:6px;" />
         </div>
+        <div style="color:#fff; font-weight:700;">Total: ₹<span id="cardTotalPrice"><?php echo (int)$room['price']; ?></span></div>
+        <a href="#paymentOverlay" id="confirmBookingBtn" class="book-now" style="text-decoration: none;">Confirm Booking</a>
       </div>
         <!-- fullscreen image gallery overlay -->
         <div id="imgOverlay" class="img-overlay" aria-hidden="true" role="dialog" aria-label="Image viewer">
@@ -386,8 +197,7 @@
 
             <div style="display: flex; gap: 12px; align-items: center">
               <input type="hidden" name="room_id" value="<?php echo (int)$room['id']; ?>" />
-              <label for="quantity" style="color:#ddd; margin-right:8px;">Rooms</label>
-              <input id="quantity" name="quantity" type="number" min="1" value="1" style="width:70px; padding:6px; border-radius:6px;" />
+              <input type="hidden" id="quantityHidden" name="quantity" value="1" />
               <button type="submit" class="btn-next">NEXT</button>
               <div style="color: #ddd; font-weight: 700; margin-left: 8px">
                 OR
@@ -397,6 +207,7 @@
         </div>
 
         <div class="pay-right">
+          <div style="margin:0 0 12px; font-weight:800; font-size:1.1rem;">Total: ₹<span id="modalTotalPrice"><?php echo (int)$room['price']; ?></span></div>
           <div class="qr-box">
             <img
               src="image/WhatsApp Image 2025-09-09 at 23.15.45_ce85702d.jpg"
@@ -406,15 +217,15 @@
             />
           </div>
 
-          <div style="font-size: 0.9rem; color: #666">
+          <div style="font-size: 0.9rem; color: #ddd">
             Scan and pay with any BHIM UPI app
           </div>
-          <div style="margin-top: 8px; font-weight: 700; color: #222">
+          <div style="margin-top: 8px; font-weight: 700; color: #f0f0f0">
             seasideresort@upi
           </div>
 
           <h4 style="margin-top: 18px">Scan to pay</h4>
-          <div class="upi-logos">
+          <div class="upi-logos" style="color:#ddd">
             <span>GPay</span><span>PhonePe</span><span>Paytm</span
             ><span>Amazon Pay</span>
           </div>
@@ -422,14 +233,15 @@
       </div>
     </div>
     <div class="contact-section">
-      <h2>Contact Us</h2>
+     <div class="contacts"> <h2>Contact Us</h2>
       <p>Seaside Road, Bardez, Goa - 403507</p>
       <p>📞 +91 832 555 0123</p>
-      <p>✉️ www.seasideresort.com</p>
+      <p>✉️ www.seasideresort.com</p></div><div class="map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3167.421090365323!2d73.79243147512595!3d15.594991185017815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbfeb0074e556bd%3A0x8df5557f01b8a85!2sAgnel%20Institute%20of%20Technology%20and%20Design!5e1!3m2!1sen!2sin!4v1762616821915!5m2!1sen!2sin" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+      </div>
     </div>
-    <!-- Image gallery script (inline, no external deps) -->
     <script>
-      // Build gallery images list from PHP-provided URLs
       (function(){
         const images = <?php
           $g = [];
@@ -442,82 +254,108 @@
 
         if (!images || images.length === 0) return;
 
+        // Overlay elements
         const overlay = document.getElementById('imgOverlay');
-        const mainImg = document.getElementById('galleryImage');
-        const thumbs = document.getElementById('galleryThumbs');
+        const overlayImg = document.getElementById('galleryImage');
+        const overlayThumbs = document.getElementById('galleryThumbs');
         const btnPrev = overlay.querySelector('.gallery-nav.prev');
         const btnNext = overlay.querySelector('.gallery-nav.next');
         const btnClose = overlay.querySelector('.gallery-close');
 
+        // Page images
+        const bigImage = document.getElementById('bigimg');
+        const pageThumbIds = ['smallimg1','smallimg2','smallimg3'];
+
         let current = 0;
 
-        function setImage(idx) {
+        function setOverlay(idx){
           current = (idx + images.length) % images.length;
-          mainImg.src = images[current];
-          mainImg.alt = 'Image ' + (current + 1) + ' of ' + images.length;
-          Array.from(thumbs.children).forEach((t,i)=> t.classList.toggle('active', i===current));
+          overlayImg.src = images[current];
+          overlayImg.alt = 'Image ' + (current + 1) + ' of ' + images.length;
+          Array.from(overlayThumbs.children).forEach((t,i)=> t.classList.toggle('active', i===current));
         }
 
-        // populate thumbnails
+        // Build overlay thumbnails once
         images.forEach((src, i) => {
           const t = document.createElement('img');
           t.src = src;
           t.alt = 'Thumbnail ' + (i+1);
-          t.addEventListener('click', (e) => setImage(i));
-          thumbs.appendChild(t);
+          t.addEventListener('click', () => setOverlay(i));
+          overlayThumbs.appendChild(t);
         });
 
-        // open overlay at index
-        function openAt(idx) {
-          setImage(idx);
+        function openOverlayFromMain(){
+          // Try to open at the index matching current big image
+          const currentSrc = bigImage ? bigImage.src : '';
+          let idx = 0;
+          if (currentSrc) {
+            const found = images.findIndex(s => currentSrc.endsWith(s));
+            if (found >= 0) idx = found;
+          }
+          setOverlay(idx);
           overlay.classList.add('open');
           overlay.setAttribute('aria-hidden','false');
-          // focus for keyboard nav
           btnClose.focus();
         }
-
-        function closeOverlay() {
+        function closeOverlay(){
           overlay.classList.remove('open');
           overlay.setAttribute('aria-hidden','true');
         }
 
-        btnPrev.addEventListener('click', ()=> setImage(current-1));
-        btnNext.addEventListener('click', ()=> setImage(current+1));
+        btnPrev.addEventListener('click', ()=> setOverlay(current-1));
+        btnNext.addEventListener('click', ()=> setOverlay(current+1));
         btnClose.addEventListener('click', closeOverlay);
-
-        // close on background click
-        overlay.addEventListener('click', (e)=>{
-          if (e.target === overlay) closeOverlay();
-        });
-
-        // keyboard navigation
+        overlay.addEventListener('click', (e)=>{ if (e.target === overlay) closeOverlay(); });
         document.addEventListener('keydown', (e)=>{
           if (!overlay.classList.contains('open')) return;
-          if (e.key === 'ArrowLeft') setImage(current-1);
-          if (e.key === 'ArrowRight') setImage(current+1);
+          if (e.key === 'ArrowLeft') setOverlay(current-1);
+          if (e.key === 'ArrowRight') setOverlay(current+1);
           if (e.key === 'Escape') closeOverlay();
         });
 
-        // open when clicking the main big image on the details page
-        const bigImage = document.getElementById('bigimg');
+        // Big image opens overlay
         if (bigImage) {
           bigImage.style.cursor = 'zoom-in';
-          bigImage.addEventListener('click', ()=> openAt(0));
+          bigImage.addEventListener('click', openOverlayFromMain);
         }
 
-        // also open when clicking any of the small images
-        ['smallimg1','smallimg2','smallimg3'].forEach((id, idx)=>{
+        // Clicking page thumbnails changes the big image (no overlay)
+        pageThumbIds.forEach(id => {
           const el = document.getElementById(id);
           if (el) {
-            el.style.cursor = 'zoom-in';
-            el.addEventListener('click', ()=> openAt(Math.min(idx+1, images.length-1)));
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', () => {
+              if (bigImage) {
+                bigImage.src = el.src;
+                bigImage.alt = el.alt || 'Room image';
+              }
+            });
           }
         });
 
-        // initial active thumbnail
-        setImage(0);
+        // Card price updater and syncing to hidden field in form
+        const unitPrice = <?php echo (int)$room['price']; ?>;
+        const cardQty = document.getElementById('cardQuantity');
+        const cardTotal = document.getElementById('cardTotalPrice');
+        const hiddenQty = document.getElementById('quantityHidden');
+        const confirmBtn = document.getElementById('confirmBookingBtn');
+        const modalTotal = document.getElementById('modalTotalPrice');
+
+        function updateCardTotal(){
+          const q = Math.max(1, parseInt(cardQty?.value || '1', 10) || 1);
+          if (cardTotal) cardTotal.textContent = String(unitPrice * q);
+          if (hiddenQty) hiddenQty.value = String(q);
+          if (modalTotal) modalTotal.textContent = String(unitPrice * q);
+        }
+        if (cardQty) {
+          cardQty.addEventListener('input', updateCardTotal);
+          cardQty.addEventListener('change', updateCardTotal);
+          updateCardTotal();
+        }
+        if (confirmBtn) {
+          confirmBtn.addEventListener('click', updateCardTotal);
+        }
       })();
     </script>
-    <!-- bookingdetails.js removed: page is server-rendered -->
   </body>
 </html>

@@ -3,10 +3,8 @@
   <head>
     <title>Seaside Resort</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="icon" href="/image/logo2.png" />
+    <link rel="icon" href="image/logo2.png" />
 <style>
-  <style>
-  /* Title override for index page */
   .welcome {
     font-size: 60px;
     animation: ToptoDown 1.5s 0.3s 1;
@@ -15,7 +13,6 @@
     text-shadow: 7px 7px 20px rgb(65, 187, 217);
   }
 
-  /* --- Info Containers --- */
   .container1 {
     display: flex;
     flex-direction: row;
@@ -41,7 +38,6 @@
     background: rgba(56, 53, 53, 0.806);
   }
 
-  /* --- Image Gallery --- */
   .gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -59,7 +55,6 @@
     transform: scale(1.05);
   }
 
-  /* --- Features --- */
   .features-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -80,7 +75,6 @@
     background: rgb(0, 58, 10);
   }
   
-  /* --- 3D Model --- */
   spline-viewer {
     width: 100%;
     height: 500px;
@@ -103,11 +97,7 @@
     margin-bottom: 20px;
   }
 
-  /* --- Index Contact Section --- */
-  .contact-section {
-    display: flex;
-    flex-direction: row;
-  }
+
   .contacts {
     width: 50%;
   }
@@ -119,7 +109,9 @@
     border-radius: 20px;
     width: 700px;
   }
-</style>
+  html {
+  scroll-behavior: smooth;
+}
 </style>
   </head>
   <body>
@@ -127,7 +119,7 @@
       <ul>
         <li class="logo">
           <img
-            src="image/logo2.png"
+            src="image/logo3.png"
             alt="Seaside Resort logo"
             class="logo-wordmark"
           />
@@ -159,6 +151,7 @@
     <div class="container2">
       <div class="left">
         <h1 class="welcome">Welcome to the Seaside Goa Resort</h1>
+     
         <p
           style="
             text-align: center;

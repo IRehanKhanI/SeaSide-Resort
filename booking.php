@@ -69,7 +69,6 @@ mysqli_close($conn);
     <link rel="stylesheet" href="style.css" />
 <style>
   <style>
-  /* --- Search Bar --- */
   .searchBar {
     background-color: rgba(245, 240, 240, 0.26);
     padding: 1rem;
@@ -100,7 +99,6 @@ mysqli_close($conn);
     width: 120px;
   }
   
-  /* --- Misc --- */
   .no-results {
     color: white;
     font-size: 1.1rem;
@@ -112,7 +110,6 @@ mysqli_close($conn);
     margin-top: 10px;
   }
   
-  /* --- Price Display --- */
   .price {
     font-size: 1.8rem;
     font-weight: bold;
@@ -121,7 +118,6 @@ mysqli_close($conn);
     margin-bottom: 10px;
   }
 
-  /* --- Booking Page Room Card --- */
   .roomCard {
     display: flex;
     width: 1200px;
@@ -149,7 +145,7 @@ mysqli_close($conn);
     object-fit: cover;
     border-radius: 8px;
     display: block;
-    min-width: 0;
+    min-width: 60px;
     min-height: 0;
   }
   .roomCard .images .big-img {
@@ -172,14 +168,17 @@ mysqli_close($conn);
     gap: 8px;
   }
   
-  /* This was in your booking.php, but conflicts with .roomCard .images grid. */
-  /* You may need to rename this or integrate it. */
-  .thumb-row {
-    display: flex;
-    width: 250px;
-  }
+      .thumb-row{
+        display:flex;
+        width:100%;
+        gap:8px;
+      }
   .thumb-row img {
-    margin: 5px;
+        margin:5px 0;
+        flex:1 1 0;
+  @media (max-width: 800px){
+    .searchBar{ width:95%; flex-direction:column; gap:8px; }
+    .searchBar input, .searchBar select, .searchBar button{ width:100%; }
   }
 </style>
 </style>
@@ -189,7 +188,7 @@ mysqli_close($conn);
       <ul>
         <li class="logo">
           <img
-            src="image/logo2.png"
+            src="image/logo3.png"
             alt="Seaside Resort logo"
             class="logo-wordmark"
           />
@@ -258,18 +257,118 @@ mysqli_close($conn);
             </div>
             <div class="roomSide">
               <div class="price">₹<?php echo htmlspecialchars($room['price']); ?>/-</div>
-              <a class="book-now" href="bookingdetails.php?id=<?php echo (int)$room['id']; ?>">BOOK NOW</a>
+              <a class="book-now" style="text-decoration: none;" href="bookingdetails.php?id=<?php echo (int)$room['id']; ?>">BOOK NOW</a>
             </div>
           </div>
         <?php endforeach; ?>
       <?php endif; ?>
     </div>
 
+    <!-- fullscreen image gallery overlay (shared for all cards on the page) -->
+    <div id="imgOverlay" class="img-overlay" aria-hidden="true" role="dialog" aria-label="Image viewer">
+      <button class="gallery-close" aria-label="Close viewer">✕</button>
+      <button class="gallery-nav prev" aria-label="Previous image">‹</button>
+      <div class="gallery-frame">
+        <img id="galleryImage" src="" alt="" />
+      </div>
+      <button class="gallery-nav next" aria-label="Next image">›</button>
+      <div class="gallery-thumbs" id="galleryThumbs" aria-hidden="false"></div>
+    </div>
+
+    <style>
+      .img-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 9999; }
+      .img-overlay.open { display: flex; }
+      .gallery-frame { max-width: 90%; max-height: 80%; display: flex; align-items: center; justify-content: center; }
+      .gallery-frame img { max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 10px; }
+      .gallery-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: #fff; border: none; font-size: 40px; padding: 8px 12px; cursor: pointer; border-radius: 6px; }
+      .gallery-nav.prev { left: 18px; }
+      .gallery-nav.next { right: 18px; }
+      .gallery-close { position: absolute; right: 18px; top: 18px; background: rgba(255,255,255,0.06); border: none; color: #fff; font-size: 28px; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+      .gallery-thumbs { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; max-width: 90%; overflow: auto; padding: 6px 8px; }
+      .gallery-thumbs img { height: 64px; width: auto; border-radius: 6px; cursor: pointer; opacity: 0.7; border: 2px solid transparent; }
+      .gallery-thumbs img.active { opacity: 1; border-color: #0b74de; }
+    </style>
+
+    <script>
+      (function(){
+        const overlay = document.getElementById('imgOverlay');
+        const overlayImg = document.getElementById('galleryImage');
+        const overlayThumbs = document.getElementById('galleryThumbs');
+        const btnPrev = overlay.querySelector('.gallery-nav.prev');
+        const btnNext = overlay.querySelector('.gallery-nav.next');
+        const btnClose = overlay.querySelector('.gallery-close');
+
+        let currentImages = [];
+        let current = 0;
+
+        function setOverlay(idx){
+          if (!currentImages.length) return;
+          current = (idx + currentImages.length) % currentImages.length;
+          overlayImg.src = currentImages[current];
+          overlayImg.alt = 'Image ' + (current + 1) + ' of ' + currentImages.length;
+          Array.from(overlayThumbs.children).forEach((t,i)=> t.classList.toggle('active', i===current));
+        }
+
+        function openOverlay(images, startIndex){
+          currentImages = images.slice();
+          overlayThumbs.innerHTML = '';
+          currentImages.forEach((src, i) => {
+            const t = document.createElement('img');
+            t.src = src; t.alt = 'Thumbnail ' + (i+1);
+            t.addEventListener('click', () => setOverlay(i));
+            overlayThumbs.appendChild(t);
+          });
+          setOverlay(startIndex || 0);
+          overlay.classList.add('open');
+          overlay.setAttribute('aria-hidden','false');
+          btnClose.focus();
+        }
+
+        function closeOverlay(){
+          overlay.classList.remove('open');
+          overlay.setAttribute('aria-hidden','true');
+        }
+
+        btnPrev.addEventListener('click', ()=> setOverlay(current-1));
+        btnNext.addEventListener('click', ()=> setOverlay(current+1));
+        btnClose.addEventListener('click', closeOverlay);
+        overlay.addEventListener('click', (e)=>{ if (e.target === overlay) closeOverlay(); });
+        document.addEventListener('keydown', (e)=>{
+          if (!overlay.classList.contains('open')) return;
+          if (e.key === 'ArrowLeft') setOverlay(current-1);
+          if (e.key === 'ArrowRight') setOverlay(current+1);
+          if (e.key === 'Escape') closeOverlay();
+        });
+
+        // Wire up each room card
+        document.querySelectorAll('.roomCard').forEach(card => {
+          const big = card.querySelector('.big-img');
+          const thumbs = Array.from(card.querySelectorAll('.thumb'));
+          if (!big) return;
+          const imgs = [big.src];
+          thumbs.forEach(t => { if (t.src && !imgs.includes(t.src)) imgs.push(t.src); });
+
+          // Big image opens overlay
+          big.style.cursor = 'zoom-in';
+          big.addEventListener('click', ()=> openOverlay(imgs, 0));
+
+          // Clicking thumbs swaps big image (no overlay)
+          thumbs.forEach(t => {
+            t.style.cursor = 'pointer';
+            t.addEventListener('click', () => { big.src = t.src; big.alt = t.alt || 'Room image'; });
+          });
+        });
+      })();
+    </script>
+
     <div class="contact-section">
-      <h2>Contact Us</h2>
+     <div class="contacts"> <h2>Contact Us</h2>
       <p>Seaside Road, Bardez, Goa - 403507</p>
       <p>📞 +91 832 555 0123</p>
-      <p>✉️ www.seasideresort.com</p>
+      <p>✉️ www.seasideresort.com</p></div><div class="map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3167.421090365323!2d73.79243147512595!3d15.594991185017815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbfeb0074e556bd%3A0x8df5557f01b8a85!2sAgnel%20Institute%20of%20Technology%20and%20Design!5e1!3m2!1sen!2sin!4v1762616821915!5m2!1sen!2sin" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+      </div>
     </div>
 
   </body>
